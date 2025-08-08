@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qaamuus - Somali Dictionary</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="landing-bg">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-logo">🇸🇴</div>
+            <h1 class="hero-title">Qaamuus</h1>
+            <p class="hero-subtitle">The definitive Somali language resource for learners, researchers, and the curious.</p>
+            <form class="hero-search-form">
+                <input type="text" class="hero-search-input" placeholder="Search for a Somali word…">
+                <button type="submit" class="hero-search-btn">Search</button>
+            </form>
+            <a href="#features" class="hero-cta">Start Exploring ↓</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2>Why Qaamuus?</h2>
+        <div class="features-list">
+            <div class="feature-card">
+                <span class="feature-icon">📚</span>
+                <h3>50,000+ Somali Words</h3>
+                <p>Comprehensive, up-to-date, and searchable.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🌟</span>
+                <h3>Word of the Day</h3>
+                <p>Discover a new Somali word every day, with meaning and usage.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔊</span>
+                <h3>Audio Pronunciations</h3>
+                <p>Hear native Somali pronunciation (coming soon).</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📜</span>
+                <h3>Historical Meanings</h3>
+                <p>Explore the history and evolution of Somali words.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🤝</span>
+                <h3>Community Contributions</h3>
+                <p>Help build the dictionary by suggesting words or edits.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Word of the Day Section -->
+    <section class="word-of-day">
+        <h2>Word of the Day</h2>
+        <div class="wotd-card">
+            <div class="wotd-word">Tusaale</div>
+            <div class="wotd-def">n. Example; a thing characteristic of its kind or illustrating a general rule.</div>
+            <div class="wotd-usage">"Tusaale fiican baa la bixiyay."</div>
+            <a href="#" class="wotd-more">See more</a>
+        </div>
+    </section>
+
+    <!-- Recently Added / Updated Section -->
+    <section class="recent-words">
+        <h2>Recently Added & Updated</h2>
+        <div class="recent-list">
+            <div class="recent-word-card">Aqoonyahan</div>
+            <div class="recent-word-card">Af-Soomaali</div>
+            <div class="recent-word-card">Barasho</div>
+            <div class="recent-word-card">Horumar</div>
+            <div class="recent-word-card">Dhaqan</div>
+            <div class="recent-word-card">Xikmad</div>
+        </div>
+        <a href="#" class="recent-browse">Browse all words →</a>
+    </section>
+
+    <!-- Explore & Learn Section -->
+    <section class="explore-learn">
+        <h2>Explore & Learn</h2>
+        <div class="explore-list">
+            <a href="#" class="explore-card">Browse by Letter</a>
+            <a href="#" class="explore-card">Word Lists</a>
+            <a href="#" class="explore-card">History of Somali Language</a>
+            <a href="#" class="explore-card">About the Dictionary</a>
+        </div>
+    </section>
+
+    <!-- Community & Contribution Section -->
+    <section class="community">
+        <h2>Join the Qaamuus Community</h2>
+        <p>Contribute a word, suggest an edit, or help us grow this resource for all Somali speakers.</p>
+        <a href="mailto:altrix.builder@protonmail.com" class="community-cta">Contribute / Contact</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-card">
+            <div class="footer-row">
+                <div class="footer-col footer-col-brand">
+                    <div class="footer-logo-row">
+                        <span class="footer-logo" aria-label="Qaamuus Logo">🇸🇴</span>
+                        <span class="footer-app-name">Qaamuus</span>
+                    </div>
+                    <div class="footer-tagline">Somali Dictionary<br><span class="footer-tagline-sub">Qaamuuska Soomaaliga</span></div>
+                </div>
+                <div class="footer-col footer-col-links">
+                    <a href="/static/qaam.pdf" target="_blank" rel="noopener" class="footer-link-pill" title="PDF"><span>📄</span> PDF</a>
+                    <a href="mailto:qaamuus@tusaale.com" class="footer-link-pill" title="Support Email"><span>✉️</span> Support</a>
+                    <a href="https://github.com/tusaale/qaamuus" target="_blank" rel="noopener" class="footer-link-pill" title="GitHub"><span>🌐</span> GitHub</a>
+                </div>
+                <div class="footer-col footer-col-contact">
+                    <div class="footer-contact-label">Contact:</div>
+                    <div class="footer-contact-person">Mustafa Hassan</div>
+                    <a href="mailto:altrix.builder@protonmail.com" class="footer-contact-email">altrix.builder@protonmail.com</a>
+                </div>
+            </div>
+            <div class="footer-bottom-row">
+                <span class="footer-made">Made with <span style="color:#ff4e6a">♥</span> in Somalia &mdash; Fadlan tixraac PDF-ka asalka ah, la soco wixii qalad ah, ama nala soo xiriir.</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
