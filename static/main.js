@@ -8,6 +8,10 @@ const resultsCount = document.getElementById('resultsCount');
 const loadingSpinner = document.getElementById('loadingSpinner') || (resultsContainer?.querySelector('#loadingSpinner'));
 const scrollLoader = document.getElementById('scrollLoader');
 const backToTopBtn = document.getElementById('backToTopBtn');
+// Mobile nav elements
+const navToggle = document.getElementById('navToggle');
+const primaryNav = document.getElementById('primaryNav');
+let navLastFocused = null;
 let searchTimeout;
 let currentQuery = '';
 let currentLetter = '';
@@ -112,6 +116,75 @@ suggestionBox.addEventListener('mousedown', e => {
 document.addEventListener('click', e => {
     if (!suggestionBox.contains(e.target) && e.target !== searchInput) {
         renderSuggestions([], '');
+    }
+});
+
+// --- Mobile Nav Toggle with A11y ---
+function getFocusable(root) {
+    return root ? Array.from(root.querySelectorAll('a[href], button, [tabindex]:not([tabindex="-1"])')) : [];
+}
+function openNav() {
+    if (!primaryNav) return;
+    navLastFocused = document.activeElement;
+    primaryNav.classList.add('open');
+    navToggle?.setAttribute('aria-expanded', 'true');
+    const items = getFocusable(primaryNav);
+    (items[0] || primaryNav).focus();
+    document.addEventListener('keydown', onNavKeyDown);
+    document.addEventListener('click', onNavOutsideClick, true);
+}
+function closeNav() {
+    if (!primaryNav) return;
+    primaryNav.classList.remove('open');
+    navToggle?.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('keydown', onNavKeyDown);
+    document.removeEventListener('click', onNavOutsideClick, true);
+    if (navLastFocused && typeof navLastFocused.focus === 'function') {
+        navLastFocused.focus();
+    } else if (navToggle) {
+        navToggle.focus();
+    }
+}
+function onNavKeyDown(e) {
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        closeNav();
+    } else if (e.key === 'Tab' && primaryNav && primaryNav.classList.contains('open')) {
+        const items = getFocusable(primaryNav);
+        if (!items.length) return;
+        const idx = items.indexOf(document.activeElement);
+        if (e.shiftKey && (idx <= 0)) {
+            e.preventDefault();
+            items[items.length - 1].focus();
+        } else if (!e.shiftKey && (idx === items.length - 1)) {
+            e.preventDefault();
+            items[0].focus();
+        }
+    }
+}
+function onNavOutsideClick(e) {
+    if (!primaryNav || !primaryNav.classList.contains('open')) return;
+    if (e.target === navToggle) return;
+    if (!primaryNav.contains(e.target)) closeNav();
+}
+if (navToggle && primaryNav) {
+    navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        if (expanded) closeNav(); else openNav();
+    });
+    // Close when a nav link is clicked
+    primaryNav.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target && target.closest('a')) {
+            closeNav();
+        }
+    });
+}
+
+// Close nav when resizing to desktop
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 700 && primaryNav && primaryNav.classList.contains('open')) {
+        closeNav();
     }
 });
 

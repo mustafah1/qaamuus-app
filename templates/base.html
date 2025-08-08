@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="so">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +10,9 @@
   {% block head_extra %}{% endblock %}
 </head>
 <body class="landing-bg theme-light" data-theme="light">
+  <a href="#mainContent" class="skip-link">Ka bood nuxurka</a>
   {% include 'partials/header.html' %}
-  <main class="site-main">
+  <main id="mainContent" class="site-main" tabindex="-1">
     {% block content %}{% endblock %}
   </main>
   {% include 'partials/footer.html' %}
@@ -21,12 +22,19 @@
       try {
         const saved = localStorage.getItem('qaamuus_theme');
         const body = document.body;
+        // If no saved preference, respect system preference
+        if (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          body.classList.remove('theme-light');
+          body.classList.add('theme-dark');
+          body.setAttribute('data-theme','dark');
+        }
         const setIcon = () => {
           const btn = document.getElementById('themeToggle');
           if (!btn) return;
           const dark = body.classList.contains('theme-dark');
           btn.textContent = dark ? '☀️' : '🌙';
           btn.setAttribute('aria-label', dark ? 'U baddal mawduuca iftiin' : 'U baddal mawduuca madow');
+          btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
           btn.title = dark ? 'Iftiin' : 'Madow';
         };
         if (saved === 'dark') {
@@ -45,6 +53,17 @@
           localStorage.setItem('qaamuus_theme', isDark ? 'dark' : 'light');
           setIcon();
         });
+        // React to system theme changes if user hasn't chosen explicitly
+        if (!saved && window.matchMedia) {
+          const mq = window.matchMedia('(prefers-color-scheme: dark)');
+          mq.addEventListener('change', (ev) => {
+            const dark = ev.matches;
+            body.classList.toggle('theme-dark', dark);
+            body.classList.toggle('theme-light', !dark);
+            body.setAttribute('data-theme', dark ? 'dark' : 'light');
+            setIcon();
+          });
+        }
       } catch (e) {}
     })();
   </script>
