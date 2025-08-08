@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Qaamuus - Somali Dictionary{% endblock %}</title>
+  <title>{% block title %}Qaamuus - Qaamuus Af‑Soomaali{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}?v=3">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%234facfe'/%3E%3Cstop offset='1' stop-color='%23764ba2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='12' fill='%23fff'/%3E%3Cpath d='M32 8l6.9 14 15.4 2.2-11.1 10.8 2.6 15.3L32 44.6 18.2 50.3l2.6-15.3L9.7 24.2 25.1 22z' fill='url(%23g)'/%3E%3C/svg%3E" />
@@ -26,8 +26,8 @@
           if (!btn) return;
           const dark = body.classList.contains('theme-dark');
           btn.textContent = dark ? '☀️' : '🌙';
-          btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
-          btn.title = dark ? 'Light' : 'Dark';
+          btn.setAttribute('aria-label', dark ? 'U baddal mawduuca iftiin' : 'U baddal mawduuca madow');
+          btn.title = dark ? 'Iftiin' : 'Madow';
         };
         if (saved === 'dark') {
           body.classList.remove('theme-light');
