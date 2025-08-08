@@ -99,4 +99,4 @@ Continuation lines are indented; new entries align to a left baseline. Hyphenati
 
 ## License
 
-MIT (or your preferred license). Update this section as needed.
+MIT license
