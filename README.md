@@ -1,67 +1,85 @@
-# Qaamuus - Somali Dictionary Web App
+# Qaamuus – Somali Dictionary Web App
 
-A modern web application for browsing and searching Somali words and their definitions, extracted from the qaam.pdf dictionary file.
+Modern, Somali‑first dictionary web app. The UI is fully localized in Somali and inspired by authentic linguistic content from the provided dictionary PDF. Includes fast search, infinite scroll, dark mode, and accessible modals.
 
 ## Features
 
-- 📚 **PDF Extraction**: Automatically extracts words and definitions from qaam.pdf
-- 🔍 **Smart Search**: Search for words with real-time results and highlighting
-- 📱 **Responsive Design**: Works beautifully on desktop and mobile devices
-- ⚡ **Fast Performance**: Cached dictionary data for quick searches
-- 🎨 **Modern UI**: Clean, intuitive interface with smooth animations
+- 📚 **PDF Corpus**: Text extracted from the source PDF for research/AI use (`data/qaam_corpus.json`, `data/qaam_corpus.txt`).
+- 🔎 **Search & Browse**: Query words, browse by letter, client + server pagination with infinite scroll.
+- 🗂️ **Card UI**: Modern, responsive, and consistent card layout across landing and dictionary pages.
+- 🌗 **Dark Mode**: Theme toggle with persisted preference.
+- 🌐 **Somali Localization**: All UI text in Somali with culturally accurate phrasing.
+- ♿ **Accessibility**: Keyboard‑navigable modals, focus management, aria labels.
 
-## Setup Instructions
+## Quick Start
 
-1. **Install Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+1) Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
-2. **Run the Application**
-   ```bash
-   python app.py
-   ```
+2) Run the app
+```bash
+python app.py
+```
 
-3. **Access the Dictionary**
-   Open your browser and go to: `http://localhost:5000`
+3) Open in browser
+```
+http://localhost:5000
+```
 
 ## How It Works
 
-1. **First Run**: The app extracts all words and definitions from `qaam.pdf` and caches them in `dictionary_cache.json`
-2. **Subsequent Runs**: Uses the cached data for faster loading
-3. **Search**: Type any Somali word to find matches and definitions
-4. **Browse**: Click "Show All" to see all available words
+- On startup, the backend loads a cached dictionary (`dictionary_cache.json`) or extracts entries from `qaam.pdf` using a pattern‑based parser.
+- Frontend renders results with client‑side pagination; server endpoints support offset/limit for efficient loading.
+- The full PDF text (72 pages) has been extracted for future AI/RAG workflows:
+  - JSON (page‑by‑page): `data/qaam_corpus.json`
+  - TXT (concatenated): `data/qaam_corpus.txt`
 
-## Technical Details
+## Scripts
 
-- **Backend**: Flask (Python)
-- **PDF Processing**: PyPDF2
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Data Storage**: JSON cache file
-- **Search**: Real-time client-side and server-side search
+- `scripts/extract_pdf_text.py` – Extracts page text from `qaam-cama_removed.pdf` into the `data/` folder.
 
-## File Structure
+Run it manually if needed:
+```bash
+python scripts/extract_pdf_text.py
+```
+
+## Key Routes
+
+- `/` – Landing page (Somali content + educational sections)
+- `/dictionary` – Dictionary UI (search, browse, infinite scroll)
+- `/search` – Search endpoint (query params include `q`, optional pagination)
+
+## Project Structure (selected)
 
 ```
 Qaamuus App/
-├── app.py                 # Main Flask application
-├── qaam.pdf              # Source dictionary PDF
-├── requirements.txt      # Python dependencies
-├── dictionary_cache.json # Cached extracted data (auto-generated)
+├── app.py
+├── requirements.txt
+├── static/
+│   └── main.css
 ├── templates/
-│   └── index.html        # Web interface
-└── README.md            # This file
+│   ├── base.html
+│   ├── landing.html
+│   ├── index.html
+│   └── partials/
+│       ├── header.html
+│       ├── footer.html
+│       ├── dictionary_search.html
+│       └── entry_modal.html
+├── data/
+│   ├── qaam_corpus.json
+│   └── qaam_corpus.txt
+└── scripts/
+    └── extract_pdf_text.py
 ```
 
-## Usage Tips
+## Notes
 
-- Search works with partial matches
-- Results are highlighted for easy reading
-- The app automatically caches extracted data for better performance
-- If the PDF format changes, delete `dictionary_cache.json` to re-extract
+- If you update the source PDF (`qaam.pdf`), delete `dictionary_cache.json` to force re‑extraction on next run.
+- For deploying, ensure static assets are cache‑busted if needed (e.g., `?v=3`).
 
-## Troubleshooting
+## License
 
-- If no words appear, check that `qaam.pdf` is in the same directory as `app.py`
-- Delete `dictionary_cache.json` and restart if you update the PDF file
-- Check the console output for extraction progress and any errors
+MIT (or your preferred license). Update this section as needed.
