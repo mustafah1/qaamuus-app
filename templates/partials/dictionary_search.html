@@ -1,0 +1,25 @@
+{# Dictionary Search Component #}
+<section {% if section_id %}id="{{ section_id }}"{% endif %} class="dictionary-search section-card">
+  <div class="search-container">
+    <input id="searchInput" type="text" class="search-input" placeholder="Raadi eray Soomaali…" autocomplete="off" aria-label="Raadi eray Soomaali">
+    <button id="searchBtn" class="search-btn btn btn-primary" aria-label="Raadi">Raadi</button>
+    <button id="showAllBtn" class="show-all-btn btn btn-outline" aria-label="Eeg dhammaan erayada">Dhammaan</button>
+  </div>
+  <div id="letterIndex" class="letter-index"></div>
+  <div id="resultsCount" class="results-count"></div>
+  <div id="suggestionBox" class="suggestion-box"></div>
+  <div id="resultsContainer" class="results-container">
+    <div class="loading" id="loadingSpinner" style="display: none;">
+      <div class="spinner"></div>
+      <p>Loading dictionary...</p>
+    </div>
+  </div>
+  <div id="scrollLoader" class="scroll-loader" style="display:none">
+    <div class="spinner"></div>
+    <span class="loader-label">Soo dejinaya…</span>
+  </div>
+  <div class="load-more-wrap">
+    <button id="loadMoreBtn" class="btn btn-ghost" style="display:none" aria-label="Muuji kuwo kale">Muuji kuwo kale</button>
+  </div>
+  <button class="back-to-top" id="backToTopBtn" aria-label="Back to top">↑</button>
+</section>

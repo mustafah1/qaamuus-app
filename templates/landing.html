@@ -1,128 +1,189 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qaamuus - Somali Dictionary</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="landing-bg">
+{% extends 'base.html' %}
+{% block title %}Qaamuus - Somali Dictionary{% endblock %}
+{% block content %}
+
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-content">
-            <div class="hero-logo">🇸🇴</div>
-            <h1 class="hero-title">Qaamuus</h1>
-            <p class="hero-subtitle">The definitive Somali language resource for learners, researchers, and the curious.</p>
-            <form class="hero-search-form">
-                <input type="text" class="hero-search-input" placeholder="Search for a Somali word…">
-                <button type="submit" class="hero-search-btn">Search</button>
-            </form>
-            <a href="#features" class="hero-cta">Start Exploring ↓</a>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">Somali • Qaamuus</div>
+                <h1 class="hero-title">Qaamuus</h1>
+                <p class="hero-subtitle">The definitive Somali language resource for learners, researchers, and the curious.</p>
+                <div class="hero-actions">
+                    <a href="#dictionary" class="btn btn-primary">Bilow Raadinta</a>
+                    <a href="/dictionary" class="btn btn-ghost" aria-label="Tag bogga Qaamuuska">Tag Qaamuus</a>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <h2>Why Qaamuus?</h2>
-        <div class="features-list">
-            <div class="feature-card">
-                <span class="feature-icon">📚</span>
-                <h3>50,000+ Somali Words</h3>
-                <p>Comprehensive, up-to-date, and searchable.</p>
+    <!-- Dictionary Search Section (for JS integration) -->
+    {% set section_id = 'dictionary' %}
+    {% include 'partials/dictionary_search.html' %}
+
+    <!-- About / Preface Section - Card Layout -->
+    <section class="about-preface section section-card">
+        <div class="container">
+        <div class="about-card card">
+            <div class="about-header">
+                <h2>Gogoldhig & Taariikh</h2>
             </div>
-            <div class="feature-card">
-                <span class="feature-icon">🌟</span>
-                <h3>Word of the Day</h3>
-                <p>Discover a new Somali word every day, with meaning and usage.</p>
+            <div class="about-preface-so">
+                <p><strong>"Guud ahaan aqoonyahannada, gaar ahaana bulshada Soomaaliyeed ee ku nool gudaha dalka Soomaaliyeed ama dibaddiisaba, annagoo aaminsan in luqaddu ay matasho shayga ugu muhimsan ee ummad lagu aqoonsado (identity), qaamuusna uu yahay waxa lagama maarmaanka u ah adeegsiga luqadda (Puglielli 2001). Qaamuuskan, dabcan ma aha mid matalaya heerka kamadambeyska ah ee loo sameeyn karo qaamuus af-soomaali, laakiin waxaan filaynaa inuu noqdo mid si wacan looga faa’idaysan karo mustaqbalka xagga diyaarinta qaamuusyo midkan ka baaxad weyn. Si kastaba ha ahaatee, qaamuuskan halka luqadeed qaabkiisa, markii laga eego xagga daraasaadka guud ee afafka Afrikada madow, waxaa la oran karaa inuu ka mid yahay qaamuusyada faro ku tiriska ah."</strong></p>
+                <p>"Dhowr jeer ayaan ka hadalnay habka aan u adeegsannay diyaariinta Qaamuuskii hore Soomaali-Talyaani (DSI) oo ereyadiisii aasaaska u yihiin qaamuuskan iyo sida aan ugu hawlgalnay ballaarinta micnaha iyo ereyada macluumaadka kala duwan. Sidaa darteed waxaa keliya aan halkan ku soo bandhigaynaa raadraacyada si ay uga faa’idaysato ciddii doonaysay in sii baarto mawduuca. Waxaan doonaynaa in aan halkan ku soo bandhigno wixii wargelin ah oo dhan oo lagama maarmaanka u ah sidii wax badan looga faa’idaysan lahaa qaamuuskan muhimka ah, inkastoo uu daldaloolo lahaan karo, waxaanna ku rajaweynnahay in ay ka faa’idaysan karaan dadka hawlahan u dhuundaloola, aqoonyahannada iyo dadweyne fara badan iyo xataa dugsiyada soomaaliyeed markii dib loo dhiso."</p>
+                <p><em>Ereyada aasaasiga ah ee lagu bilaabay qaamuuskan waxay ahaayeen ereyadii qaamuuska soomaali-talyaani (DSI) oo la daabacay sannadkii 1985... iyo qaamuuska keliya ee hal af ku qoran ee markaas jiray oo ah midkii Yaasiin Cusmaan Keenadiid (1976).</em></p>
             </div>
-            <div class="feature-card">
-                <span class="feature-icon">🔊</span>
-                <h3>Audio Pronunciations</h3>
-                <p>Hear native Somali pronunciation (coming soon).</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">📜</span>
-                <h3>Historical Meanings</h3>
-                <p>Explore the history and evolution of Somali words.</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🤝</span>
-                <h3>Community Contributions</h3>
-                <p>Help build the dictionary by suggesting words or edits.</p>
+            <div class="about-preface-en">
+                <p><strong>About this Dictionary:</strong> This Somali dictionary is a labor of love and scholarship, created for the Somali people everywhere. Language is the heart of identity, and a dictionary is essential for its preservation and growth. This work builds on previous Somali-Italian dictionaries, expanding meanings and entries, and aims to serve scholars, students, and the wider Somali community for generations to come.</p>
             </div>
         </div>
     </section>
+
+    <!-- Features Section - Card Layout -->
+    <section class="features section section-card" id="features">
+        <div class="container">
+        <div class="features-card card">
+            <h2 class="section-title">Why Qaamuus?</h2>
+            <div class="features-list grid grid-3">
+                <div class="feature-card card-flat">
+                    <span class="feature-icon">📚</span>
+                    <h3>Comprehensive Word Search</h3>
+                    <p>50,000+ Somali words, fast and accurate search, with real usage examples.</p>
+                </div>
+                <div class="feature-card card-flat">
+                    <span class="feature-icon">📖</span>
+                    <h3>Linguistic Insights</h3>
+                    <p>Learn Somali grammar, syntax, and more with guides and tables from the dictionary PDF.</p>
+                </div>
+                <div class="feature-card card-flat">
+                    <span class="feature-icon">✍️</span>
+                    <h3>Usage Examples</h3>
+                    <p>See real example sentences and how words are used in context.</p>
+                </div>
+                <div class="feature-card card-flat">
+                    <span class="feature-icon">📊</span>
+                    <h3>Reference Tables</h3>
+                    <p>Explore verb conjugations, sentence types, and focus markers—direct from the PDF.</p>
+                </div>
+                <div class="feature-card card-flat">
+                    <span class="feature-icon">🌍</span>
+                    <h3>Community Contributions</h3>
+                    <p>Suggest words, corrections, or help grow the Somali language resource.</p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Did You Know Widget -->
+    <section class="did-you-know section section-card">
+        <div class="container">
+        <div class="dyk-card card-flat">
+            <span class="dyk-icon">💡</span>
+            <div class="dyk-content">
+                <h3>Ma Ogtahay?</h3>
+                <p>Somali verbs can be conjugated in dozens of forms, and focus markers like <strong>baa</strong> and <strong>ayaa</strong> play a unique role in sentence structure. Explore more in the Grammar section below!</p>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Learn Somali Grammar Section - Card Layout -->
+    <section class="learn-grammar section section-card" id="grammar">
+        <div class="container">
+        <div class="grammar-card-group card">
+            <h2 class="section-title">Learn Somali Grammar</h2>
+            <div class="grammar-list grid grid-3">
+                <div class="grammar-card card-flat">
+                    <span class="grammar-icon">📝</span>
+                    <h3>Sentence Types</h3>
+                    <p>Declarative, interrogative, imperative, and more—explained with real Somali examples from the PDF.</p>
+                    <a href="#" class="grammar-link">View Examples</a>
+                </div>
+                <div class="grammar-card card-flat">
+                    <span class="grammar-icon">🎯</span>
+                    <h3>Focus Markers (baa, ayaa)</h3>
+                    <p>Understand the role of focus markers in Somali syntax, with authentic usage and explanations.</p>
+                    <a href="#" class="grammar-link">Learn About Focus</a>
+                </div>
+                <div class="grammar-card card-flat">
+                    <span class="grammar-icon">🔤</span>
+                    <h3>Verb Conjugation Tables</h3>
+                    <p>See full tables for verbs like <em>cuni</em> (to eat) and <em>toosi</em> (to wake up), directly from the PDF.</p>
+                    <a href="#" class="grammar-link">View Tables</a>
+                </div>
+                <div class="grammar-card card-flat">
+                    <span class="grammar-icon">💬</span>
+                    <h3>Example Sentences</h3>
+                    <p>Learn grammar and vocabulary together with real sentences and breakdowns.</p>
+                    <a href="#" class="grammar-link">See Sentences</a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
 
     <!-- Word of the Day Section -->
-    <section class="word-of-day">
-        <h2>Word of the Day</h2>
-        <div class="wotd-card">
+    <section class="word-of-day section section-card">
+        <div class="container">
+        <h2 class="section-title">Ereyga Maanta</h2>
+        <div class="wotd-card card">
             <div class="wotd-word">Tusaale</div>
             <div class="wotd-def">n. Example; a thing characteristic of its kind or illustrating a general rule.</div>
             <div class="wotd-usage">"Tusaale fiican baa la bixiyay."</div>
-            <a href="#" class="wotd-more">See more</a>
+            <a href="#" class="wotd-more">Eeg dheeraad</a>
+        </div>
         </div>
     </section>
 
     <!-- Recently Added / Updated Section -->
-    <section class="recent-words">
-        <h2>Recently Added & Updated</h2>
-        <div class="recent-list">
-            <div class="recent-word-card">Aqoonyahan</div>
-            <div class="recent-word-card">Af-Soomaali</div>
-            <div class="recent-word-card">Barasho</div>
-            <div class="recent-word-card">Horumar</div>
-            <div class="recent-word-card">Dhaqan</div>
-            <div class="recent-word-card">Xikmad</div>
+    <section class="recent-words section section-card">
+        <div class="container">
+        <h2 class="section-title">Kuwa Ugu Dambeeyay & La Cusbooneysiiyay</h2>
+        <div class="recent-list chip-grid">
+            <div class="recent-word-card chip">Aqoonyahan</div>
+            <div class="recent-word-card chip">Af-Soomaali</div>
+            <div class="recent-word-card chip">Barasho</div>
+            <div class="recent-word-card chip">Horumar</div>
+            <div class="recent-word-card chip">Dhaqan</div>
+            <div class="recent-word-card chip">Xikmad</div>
         </div>
-        <a href="#" class="recent-browse">Browse all words →</a>
+        <a href="#" class="recent-browse link-quiet">Eeg dhammaan erayada</a>
+        </div>
     </section>
 
     <!-- Explore & Learn Section -->
-    <section class="explore-learn">
-        <h2>Explore & Learn</h2>
-        <div class="explore-list">
-            <a href="#" class="explore-card">Browse by Letter</a>
-            <a href="#" class="explore-card">Word Lists</a>
-            <a href="#" class="explore-card">History of Somali Language</a>
-            <a href="#" class="explore-card">About the Dictionary</a>
+    <section class="explore-learn section section-card">
+        <div class="container">
+        <h2 class="section-title">Sahaminta & Barashada</h2>
+        <div class="explore-list grid grid-4">
+            <a href="#" class="explore-card card-flat">Browse by Letter</a>
+            <a href="#" class="explore-card card-flat">Word Lists</a>
+            <a href="#" class="explore-card card-flat">History of Somali Language</a>
+            <a href="#" class="explore-card card-flat">About the Dictionary</a>
+        </div>
         </div>
     </section>
 
     <!-- Community & Contribution Section -->
-    <section class="community">
-        <h2>Join the Qaamuus Community</h2>
-        <p>Contribute a word, suggest an edit, or help us grow this resource for all Somali speakers.</p>
-        <a href="mailto:altrix.builder@protonmail.com" class="community-cta">Contribute / Contact</a>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-card">
-            <div class="footer-row">
-                <div class="footer-col footer-col-brand">
-                    <div class="footer-logo-row">
-                        <span class="footer-logo" aria-label="Qaamuus Logo">🇸🇴</span>
-                        <span class="footer-app-name">Qaamuus</span>
-                    </div>
-                    <div class="footer-tagline">Somali Dictionary<br><span class="footer-tagline-sub">Qaamuuska Soomaaliga</span></div>
+    <section class="community section section-card" id="community">
+        <div class="container">
+            <div class="community-grid">
+                <div class="community-content card">
+                    <h2 class="section-title">Join the Community</h2>
+                    <p>Qaamuus is a living dictionary, shaped by its users. Contribute words, suggest corrections, or share your knowledge of the Somali language.</p>
+                    <p class="footer-tagline-sub">Preserving Somali language, culture, and knowledge for generations.</p>
                 </div>
-                <div class="footer-col footer-col-links">
-                    <a href="/static/qaam.pdf" target="_blank" rel="noopener" class="footer-link-pill" title="PDF"><span>📄</span> PDF</a>
-                    <a href="mailto:qaamuus@tusaale.com" class="footer-link-pill" title="Support Email"><span>✉️</span> Support</a>
-                    <a href="https://github.com/tusaale/qaamuus" target="_blank" rel="noopener" class="footer-link-pill" title="GitHub"><span>🌐</span> GitHub</a>
+                <div class="community-contact card-flat">
+                    <h3 style="margin:0 0 8px 0;">Contact</h3>
+                    <div>Mustafa Hassan</div>
+                    <a href="mailto:altrix.builder@protonmail.com" class="link-quiet">altrix.builder@protonmail.com</a>
                 </div>
-                <div class="footer-col footer-col-contact">
-                    <div class="footer-contact-label">Contact:</div>
-                    <div class="footer-contact-person">Mustafa Hassan</div>
-                    <a href="mailto:altrix.builder@protonmail.com" class="footer-contact-email">altrix.builder@protonmail.com</a>
-                </div>
-            </div>
-            <div class="footer-bottom-row">
-                <span class="footer-made">Made with <span style="color:#ff4e6a">♥</span> in Somalia &mdash; Fadlan tixraac PDF-ka asalka ah, la soco wixii qalad ah, ama nala soo xiriir.</span>
             </div>
         </div>
-    </footer>
-</body>
-</html>
+    </section>
+
+    <!-- Entry Modal -->
+    {% include 'partials/entry_modal.html' %}
+{% endblock %}

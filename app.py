@@ -107,26 +107,45 @@ class SomaliDictionary:
 dictionary = SomaliDictionary()
 
 @app.route('/')
-def index():
+def landing():
+    return render_template('landing.html')
+
+@app.route('/dictionary')
+def dictionary_page():
     return render_template('index.html')
 
 @app.route('/search')
 def search():
     query = request.args.get('q', '').strip()
+    # Pagination params
+    try:
+        limit = max(1, min(int(request.args.get('limit', 40)), 200))
+    except ValueError:
+        limit = 40
+    try:
+        offset = max(0, int(request.args.get('offset', 0)))
+    except ValueError:
+        offset = 0
     if not query:
-        return jsonify({'results': [], 'count': 0, 'query': query})
+        return jsonify({'results': [], 'count': 0, 'total_count': 0, 'offset': offset, 'limit': limit, 'query': query})
     conn = get_db()
     c = conn.cursor()
-    # Use FTS5 for partial, typo-tolerant, and full-text search on both word and definition
+    # Total count first
+    c.execute('''
+        SELECT COUNT(*) AS cnt FROM dictionary_fts
+        WHERE dictionary_fts MATCH ?
+    ''', (query + '*',))
+    total = c.fetchone()['cnt']
+    # Page of results (FTS5 rank ordering)
     c.execute('''
         SELECT word, definition FROM dictionary_fts
         WHERE dictionary_fts MATCH ?
         ORDER BY rank
-        LIMIT 50;
-    ''', (query + '*',))
+        LIMIT ? OFFSET ?;
+    ''', (query + '*', limit, offset))
     results = [(row['word'], row['definition']) for row in c.fetchall()]
     conn.close()
-    return jsonify({'results': results, 'count': len(results), 'query': query})
+    return jsonify({'results': results, 'count': len(results), 'total_count': total, 'offset': offset, 'limit': limit, 'query': query})
 
 import sqlite3
 
@@ -165,23 +184,48 @@ def index_letters():
 @app.route('/words_by_letter')
 def words_by_letter():
     letter = request.args.get('letter', '').strip().upper()
+    try:
+        limit = max(1, min(int(request.args.get('limit', 40)), 200))
+    except ValueError:
+        limit = 40
+    try:
+        offset = max(0, int(request.args.get('offset', 0)))
+    except ValueError:
+        offset = 0
     if not letter or len(letter) != 1:
-        return jsonify({'results': [], 'count': 0, 'letter': letter})
+        return jsonify({'results': [], 'count': 0, 'total_count': 0, 'offset': offset, 'limit': limit, 'letter': letter})
     conn = get_db()
     c = conn.cursor()
-    c.execute("SELECT word, definition FROM dictionary WHERE UPPER(SUBSTR(word, 1, 1)) = ? ORDER BY word ASC LIMIT 200;", (letter,))
+    # Total count by letter
+    c.execute("SELECT COUNT(*) AS cnt FROM dictionary WHERE UPPER(SUBSTR(word, 1, 1)) = ?;", (letter,))
+    total = c.fetchone()['cnt']
+    c.execute("SELECT word, definition FROM dictionary WHERE UPPER(SUBSTR(word, 1, 1)) = ? ORDER BY word ASC LIMIT ? OFFSET ?;", (letter, limit, offset))
     results = [(row['word'], row['definition']) for row in c.fetchall()]
     conn.close()
-    return jsonify({'results': results, 'count': len(results), 'letter': letter})
+    return jsonify({'results': results, 'count': len(results), 'total_count': total, 'offset': offset, 'limit': limit, 'letter': letter})
 
 @app.route('/all_words')
 def all_words():
-    # Return all words in alphabetical order
+    # Return words in alphabetical order with pagination
+    try:
+        limit = max(1, min(int(request.args.get('limit', 40)), 200))
+    except ValueError:
+        limit = 40
+    try:
+        offset = max(0, int(request.args.get('offset', 0)))
+    except ValueError:
+        offset = 0
     all_words = sorted(dictionary.words.items())
+    total = len(all_words)
+    page = all_words[offset:offset + limit]
     return jsonify({
-        'results': all_words[:200],  # Limit to first 200 for performance
-        'total_count': len(dictionary.words)
+        'results': page,
+        'count': len(page),
+        'total_count': total,
+        'offset': offset,
+        'limit': limit
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5002)
+    port = int(os.environ.get('PORT', '5002'))
+    app.run(debug=True, host='0.0.0.0', port=port)

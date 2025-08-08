@@ -1,78 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qaamuus - Somali Dictionary</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <div class="logo" aria-label="Somali flag">🇸🇴</div>
+{% extends 'base.html' %}
+{% block title %}Qaamuus - Somali Dictionary{% endblock %}
+{% block content %}
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">Q</div>
             <div>
-                <div class="title">Qaamuus</div>
-                <div class="subtitle">Somali Dictionary - Qaamuuska Soomaaliga</div>
+                <h1 class="title">Qaamuus</h1>
+                <p class="subtitle">Your comprehensive Somali dictionary</p>
             </div>
         </header>
-        <main>
-            <section class="search-section" aria-label="Search Somali Dictionary">
-                <div class="search-container">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Raadi Eray Somali ah..." autocomplete="off" aria-label="Search input">
-                    <button id="searchBtn" class="search-btn" aria-label="Search">Search</button>
-                    <button id="showAllBtn" class="show-all-btn" aria-label="Show All Words">Show All</button>
-                </div>
-                <div class="results-info">
-                    <span id="resultsCount" class="results-count"></span>
-                </div>
-                <div id="letterIndex" class="letter-index"></div>
-            </section>
-            <section class="results-container" aria-live="polite">
-                <div id="loadingSpinner" class="loading" style="display: none;">
-                    <div class="spinner"></div>
-                    <p>Loading dictionary...</p>
-                </div>
-                <div id="resultsContainer"></div>
-            </section>
-        </main>
-        <button class="back-to-top" id="backToTopBtn" aria-label="Back to top">↑</button>
-        <footer class="footer">
-            <div class="footer-card">
-                <div class="footer-row">
-                    <div class="footer-col footer-col-brand">
-                        <div class="footer-logo-row">
-                            <span class="footer-logo" aria-label="Qaamuus Logo">🇸🇴</span>
-                            <span class="footer-app-name">Qaamuus</span>
-                        </div>
-                        <div class="footer-tagline">Somali Dictionary<br><span class="footer-tagline-sub">Qaamuuska Soomaaliga</span></div>
-                    </div>
-                    <div class="footer-col footer-col-links">
-                        <a href="/static/qaam.pdf" target="_blank" rel="noopener" class="footer-link-pill" title="PDF"><span>📄</span> PDF</a>
-                        <a href="mailto:qaamuus@tusaale.com" class="footer-link-pill" title="Support Email"><span>✉️</span> Support</a>
-                        <a href="https://github.com/tusaale/qaamuus" target="_blank" rel="noopener" class="footer-link-pill" title="GitHub"><span>🌐</span> GitHub</a>
-                    </div>
-                    <div class="footer-col footer-col-contact">
-                        <div class="footer-contact-label">Contact:</div>
-                        <div class="footer-contact-person">Mustafa Hassan</div>
-                        <a href="mailto:altrix.builder@protonmail.com" class="footer-contact-email">altrix.builder@protonmail.com</a>
-                    </div>
-                </div>
-                <div class="footer-bottom-row">
-                    <span class="footer-made">Made with <span style="color:#ff4e6a">♥</span> in Somalia &mdash; Fadlan tixraac PDF-ka asalka ah, la soco wixii qalad ah, ama nala soo xiriir.</span>
-                </div>
-            </div>
-        </footer>
+        {% include 'partials/dictionary_search.html' %}
     </div>
-    <div id="entryModal" class="entry-modal" style="display: none;">
-        <div class="entry-modal-content">
-            <button class="entry-modal-close" id="entryModalClose" aria-label="Close">&times;</button>
-            <div class="entry-modal-word" id="entryModalWord"></div>
-            <div class="entry-modal-definition" id="entryModalDefinition"></div>
-        </div>
-    </div>
-    <script src="{{ url_for('static', filename='main.js') }}"></script>
-</body>
-</html>
+    {% include 'partials/entry_modal.html' %}
+{% endblock %}
