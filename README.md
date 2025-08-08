@@ -31,7 +31,7 @@ http://localhost:5000
 
 ## How It Works
 
-- On startup, the backend loads entries from an **SQLite DB** (`dictionary.db`) populated from the PDF. A lightweight cache file (`dictionary_cache.json`) may also be used during development.
+- On startup, the backend loads entries exclusively from an **SQLite DB** (`dictionary.db`) populated from the PDF via scripts. No JSON cache is used at runtime.
 - Frontend renders results with client‑side pagination; server endpoints support offset/limit for efficient loading.
 - The full PDF text (72 pages) has been extracted for future AI/RAG workflows:
   - JSON (page‑by‑page): `data/qaam_corpus.json`
@@ -41,9 +41,8 @@ http://localhost:5000
 
 - `scripts/extract_entries_pymupdf.py` – Structured extractor using PyMuPDF; produces normalized entries, POS, refs, and debug overlays.
 - `scripts/migrate_extracted_to_db.py` – Loads extracted entries into `dictionary.db` (SQLite schema) with cross‑refs.
-- `scripts/extract_pdf_text.py` – Basic text extraction from `qaam-cama_removed.pdf` into `data/`.
 
-Run any script, for example:
+Run a migrator, for example:
 ```bash
 python scripts/migrate_extracted_to_db.py
 ```
@@ -63,8 +62,10 @@ python scripts/migrate_extracted_to_db.py
 Qaamuus App/
 ├── app.py
 ├── requirements.txt
+├── dictionary.db
 ├── static/
-│   └── main.css
+│   ├── main.css
+│   └── main.js
 ├── templates/
 │   ├── base.html
 │   ├── landing.html
@@ -76,14 +77,16 @@ Qaamuus App/
 │       └── entry_modal.html
 ├── data/
 │   ├── qaam_corpus.json
-│   └── qaam_corpus.txt
+│   ├── qaam_corpus.txt
+│   └── full_entries.json
 └── scripts/
-    └── extract_pdf_text.py
+    ├── extract_entries_pymupdf.py
+    └── migrate_extracted_to_db.py
 ```
 
 ## Notes
 
-- If you update the source PDF (`qaam.pdf`), rebuild `dictionary.db` by re‑running the extractor + migrator. Delete `dictionary_cache.json` if present.
+- If you update the source PDF (`qaam.pdf`), rebuild `dictionary.db` by re‑running the extractor + migrator.
 - For deploying, ensure static assets are cache‑busted if needed (e.g., `?v=3`).
 
 ## Dictionary Entry Format
