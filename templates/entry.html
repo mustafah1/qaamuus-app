@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}{{ entry.word if ok else 'Gelinta lama helin' }} - Qaamuus{% endblock %}
+{% block head_extra %}
+  {% if ok %}
+    {% if canonical %}<link rel="canonical" href="{{ canonical }}" />{% endif %}
+    <meta name="description" content="{{ (entry.definition or '')[:155]|e }}" />
+    <meta property="og:title" content="{{ entry.word }} - Qaamuus" />
+    <meta property="og:description" content="{{ (entry.definition or '')[:200]|e }}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="{{ canonical or request.url }}" />
+    <meta property="og:site_name" content="Qaamuus" />
+    <meta name="twitter:card" content="summary" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "DefinedTerm",
+      "name": "{{ entry.word }}",
+      "inDefinedTermSet": "https://qaamuus.com",
+      "termCode": "{{ entry.pos }}",
+      "description": "{{ (entry.definition or '')|e }}"
+    }
+    </script>
+  {% endif %}
+{% endblock %}
+{% block content %}
+  <section class="section section-card">
+    <div class="container">
+      {% if not ok %}
+        <div class="card"><h1>Ma jiro</h1><p>{{ error or 'Gelintan lama helin.' }}</p></div>
+      {% else %}
+        <article class="card">
+          <header class="entry-header">
+            <h1 class="entry-title">{{ entry.word }}{% if entry.pos %} <small class="entry-pos">{{ entry.pos }}</small>{% endif %}</h1>
+            {% if entry.page %}<div class="entry-source">Bogga {{ entry.page }}{% if entry.column %} · Tiir {{ entry.column }}{% endif %}</div>{% endif %}
+          </header>
+          <div class="entry-body">
+            <p class="entry-definition">{{ entry.definition }}</p>
+            {% if entry.crossRefs and entry.crossRefs|length %}
+              <div class="entry-refs">
+                <div class="label">Tixraac</div>
+                <div class="chip-grid">
+                  {% for r in entry.crossRefs %}<a href="{{ url_for('entry_page', word=r) }}" class="chip">{{ r }}</a>{% endfor %}
+                </div>
+              </div>
+            {% endif %}
+            {% if entry.seeAlso and entry.seeAlso|length %}
+              <div class="entry-seealso">
+                <div class="label">Sidoo kale eeg</div>
+                <div class="chip-grid">
+                  {% for r in entry.seeAlso %}<a href="{{ url_for('entry_page', word=r) }}" class="chip ghost">{{ r }}</a>{% endfor %}
+                </div>
+              </div>
+            {% endif %}
+            {% if entry.referredBy and entry.referredBy|length %}
+              <div class="entry-referred">
+                <div class="label">Waxaa lagu tixraacay</div>
+                <div class="chip-grid small">
+                  {% for r in entry.referredBy %}<a href="{{ url_for('entry_page', word=r) }}" class="chip subtle">{{ r }}</a>{% endfor %}
+                </div>
+              </div>
+            {% endif %}
+            {% if entry.similar and entry.similar|length %}
+              <div class="entry-similar">
+                <div class="label">Erayo la mid ah</div>
+                <div class="chip-grid">
+                  {% for r in entry.similar %}<a href="{{ url_for('entry_page', word=r) }}" class="chip">{{ r }}</a>{% endfor %}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </article>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}
