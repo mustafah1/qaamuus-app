@@ -11,6 +11,10 @@ def landing():
 def dictionary_page():
     return render_template('index.html')
 
+@app.route('/health')
+def health():
+    return Response('ok', mimetype='text/plain')
+
 # -----------------
 # SEO: robots + sitemap
 # -----------------
