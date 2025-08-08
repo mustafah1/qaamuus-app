@@ -1,0 +1,29 @@
+data/*
+qaam.pdf
+qaam-cama_removed.pdf
+qaam_corpus.json
+
+# Local databases and caches
+dictionary_cache.json
+dictionary.db
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Virtualenv
+.venv/
+venv/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Env/config
+.env
+.python-version

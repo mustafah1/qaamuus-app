@@ -46,6 +46,7 @@ function renderSuggestions(list, query) {
         suggestionBox.innerHTML = '';
         return;
     }
+
     suggestionBox.innerHTML = list.map((word, i) =>
         `<div class="suggestion-item${i === selectedSuggestion ? ' selected' : ''}" data-index="${i}">${highlightSuggestion(word, query)}</div>`
     ).join('');
@@ -331,6 +332,7 @@ function appendItems(items, query) {
             }
             const card = document.createElement('div');
             card.className = 'result-card';
+            card.dataset.word = word;
             card.innerHTML = `
                 <div class="result-meta">
                     <div class="meta-label">Somali</div>
@@ -364,11 +366,118 @@ function appendItems(items, query) {
     function getFocusableElements(root) {
         return root.querySelectorAll('a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])');
     }
+    // --- Modal rendering helpers ---
+    function escapeHtml(s) { return (s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    function normalizeText(s) { return (s || '').replace(/\s+/g, ' ').trim(); }
+    function extractRefsFromDefinition(def) {
+        const outCR = new Set();
+        const outSA = new Set();
+        if (!def) return { crossRefs: [], seeAlso: [] };
+        const text = normalizeText(def);
+        const crPhrase = /(?:\(|\b)(?:eeg|→)\s+([^);\.:]+)[);\.:]*/gi;
+        const saPhrase = /\b(?:ld|eeg\s+sidoo\s+kale)\s+([^);\.:]+)/gi;
+        const singleCR = /\beeg\s+([A-Za-z\u2019\u2032\u02bc\u02bb'\u00B9\u00B2\u00B3\-]+)/gi;
+        const singleSA = /\bld\s+([A-Za-z\u2019\u2032\u02bc\u02bb'\u00B9\u00B2\u00B3\-]+)/gi;
+        const splitList = (chunk) => (chunk || '').split(/[;,،]/).map(s => s.trim()).filter(Boolean);
+        const clean = (s) => normalizeText(s.replace(/^(eeg\s+|ld\s+)/i, ''));
+        let m;
+        while ((m = crPhrase.exec(text))) splitList(m[1]).forEach(t => outCR.add(clean(t)));
+        while ((m = saPhrase.exec(text))) splitList(m[1]).forEach(t => outSA.add(clean(t)));
+        while ((m = singleCR.exec(text))) outCR.add(clean(m[1]));
+        while ((m = singleSA.exec(text))) outSA.add(clean(m[1]));
+        return { crossRefs: Array.from(outCR), seeAlso: Array.from(outSA) };
+    }
+    function renderRefs(crossRefs, seeAlso) {
+        const refsWrap = document.getElementById('entryModalRefs');
+        if (!refsWrap) return;
+        let html = '';
+        if (crossRefs && crossRefs.length) {
+            html += `<div class="ref-row"><span class="ref-label">eeg:</span> ${crossRefs.map(r => `<button class="ref-chip" data-ref="${escapeHtml(r)}">${escapeHtml(r)}</button>`).join(' ')}</div>`;
+        }
+        if (seeAlso && seeAlso.length) {
+            html += `<div class="ref-row"><span class="ref-label">ld:</span> ${seeAlso.map(r => `<button class="ref-chip" data-ref="${escapeHtml(r)}">${escapeHtml(r)}</button>`).join(' ')}</div>`;
+        }
+        refsWrap.innerHTML = html;
+        refsWrap.style.display = html ? '' : 'none';
+        refsWrap.querySelectorAll('.ref-chip').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const term = e.currentTarget.getAttribute('data-ref');
+                if (!term) return;
+                loadEntry(term, '');
+            });
+        });
+    }
+    function renderIncoming(incoming) {
+        const wrap = document.getElementById('entryModalIncoming');
+        if (!wrap) return;
+        if (!incoming || !incoming.length) { wrap.innerHTML = ''; wrap.style.display = 'none'; return; }
+        const chips = incoming.map(w => `<button class="ref-chip" data-ref="${escapeHtml(w)}">${escapeHtml(w)}</button>`).join(' ');
+        wrap.innerHTML = `<div class="ref-row"><span class="ref-label">Waxaa lagu tixraacay:</span> ${chips}</div>`;
+        wrap.style.display = '';
+        wrap.querySelectorAll('.ref-chip').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const term = e.currentTarget.getAttribute('data-ref');
+                if (!term) return;
+                loadEntry(term, '');
+            });
+        });
+    }
+    function renderSimilar(similar) {
+        const wrap = document.getElementById('entryModalSimilar');
+        if (!wrap) return;
+        if (!similar || !similar.length) { wrap.innerHTML = ''; wrap.style.display = 'none'; return; }
+        const chips = similar.map(w => `<button class="ref-chip" data-ref="${escapeHtml(w)}">${escapeHtml(w)}</button>`).join(' ');
+        wrap.innerHTML = `<div class="ref-row"><span class="ref-label">Erayo la mid ah:</span> ${chips}</div>`;
+        wrap.style.display = '';
+        wrap.querySelectorAll('.ref-chip').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const term = e.currentTarget.getAttribute('data-ref');
+                if (!term) return;
+                loadEntry(term, '');
+            });
+        });
+    }
+    function highlightCard(word) {
+        if (!word || !resultsContainer) return;
+        const cards = Array.from(resultsContainer.querySelectorAll('.result-card'));
+        const target = cards.find(c => (c.dataset.word || '').toLowerCase() === String(word).toLowerCase());
+        if (target) {
+            target.classList.add('result-card--highlight');
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => target.classList.remove('result-card--highlight'), 1600);
+        }
+    }
+
+    // Scoped loader so it's available inside this modal context
+    const loadEntry = (word, fallbackDef = '') => {
+        fetch(`/entry?word=${encodeURIComponent(word)}`)
+            .then(r => r.ok ? r.json() : Promise.reject(r))
+            .then(data => {
+                if (!data || !data.ok) throw new Error('bad entry payload');
+                const entry = data.entry;
+                modalWord.textContent = entry.word || word;
+                modalDef.textContent = entry.definition || fallbackDef || '';
+                renderMeta(entry);
+                renderRefs(entry.crossRefs || [], entry.seeAlso || []);
+                renderIncoming(entry.referredBy || []);
+                renderSimilar(entry.similar || []);
+                highlightCard(entry.word || word);
+            })
+            .catch(() => {
+                const { crossRefs, seeAlso } = extractRefsFromDefinition(fallbackDef || '');
+                renderRefs(crossRefs, seeAlso);
+                renderIncoming([]);
+                renderSimilar([]);
+                highlightCard(word);
+            });
+    };
+
     function openModal(word, def) {
         if (!modal || !modalClose || !modalWord || !modalDef) return; // no modal on this page
         lastFocusedElement = document.activeElement;
         modalWord.textContent = word;
         modalDef.textContent = def;
+        loadEntry(word, def);
         modal.style.display = 'flex';
         // focus first focusable
         const focusables = getFocusableElements(modal);
