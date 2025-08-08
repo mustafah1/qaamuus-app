@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: qaamuus
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      # If you prefer to (re)build the DB on deploy, uncomment the next line
+      # python scripts/migrate_extracted_to_db.py data/full_entries.json
+    startCommand: gunicorn app:app -b 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120
+    autoDeploy: true
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: FLASK_ENV
+        value: "production"
+      # If you later store DB on disk path, ensure app uses this path
+      # - key: DATABASE_URL
+      #   value: "sqlite:///dictionary.db"
