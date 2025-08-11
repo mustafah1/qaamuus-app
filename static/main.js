@@ -162,6 +162,11 @@ function onNavKeyDown(e) {
             items[0].focus();
         }
     }
+    // Attach close and backdrop handlers if modal exists (scoped)
+    if (modal && modalClose) {
+        modalClose.onclick = () => { closeModal(); };
+        modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+    }
 }
 function onNavOutsideClick(e) {
     if (!primaryNav || !primaryNav.classList.contains('open')) return;
@@ -343,7 +348,7 @@ function appendItems(items, query) {
                         ${pos ? `<span class="result-pos">${pos}</span>` : ''}
                     </div>
                     <div class="result-preview">${highlightText(preview, query)}</div>
-                    <a href="#" class="result-view-link" data-idx="${idx}">Eeg faahfaahin</a>
+                    <a href="/e/${encodeURIComponent(word)}" class="result-view-link" data-idx="${idx}">Eeg faahfaahin</a>
                     <div class="result-full-def" style="display:none;">${highlightText(def, query)}</div>
                 </div>
             `;
@@ -355,8 +360,7 @@ function appendItems(items, query) {
     });
     updateCountLabel();
     if (DEBUG) console.log('displayResults appended cards:', appended);
-    // Expand/collapse logic for 'Eeg faahfaahin'
-    // Modal logic for 'Eeg faahfaahin' (optional on some pages)
+    // Modal logic retained for other triggers, but 'Eeg faahfaahin' links now navigate to /e/<word>
     const modal = document.getElementById('entryModal');
     const modalClose = document.getElementById('entryModalClose');
     const modalWord = document.getElementById('entryModalWord');
@@ -514,23 +518,7 @@ function appendItems(items, query) {
             }
         }
     }
-
-    resultsContainer.querySelectorAll('.result-view-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const word = this.closest('.result-card')?.querySelector('.result-word')?.textContent || '';
-            const def = this.closest('.result-card')?.querySelector('.result-full-def')?.textContent || '';
-            openModal(word, def);
-        });
-    });
-    // Modal close and backdrop click (only if modal exists)
-    if (modal && modalClose) {
-        modalClose.onclick = () => { closeModal(); };
-        modal.onclick = (e) => { if (e.target === modal) closeModal(); };
-    }
-
 }
-
 function highlightText(text, query) {
     // First, make 'eeg WORD' clickable (WORD = Somali word, not punctuation)
     text = text.replace(/eeg ([a-zA-Z’ʼʻ0-9()¹²³'′]+)/g, function(match, word) {

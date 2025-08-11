@@ -30,40 +30,70 @@
       {% else %}
         <article class="card">
           <header class="entry-header">
-            <h1 class="entry-title">{{ entry.word }}{% if entry.pos %} <small class="entry-pos">{{ entry.pos }}</small>{% endif %}</h1>
-            {% if entry.page %}<div class="entry-source">Bogga {{ entry.page }}{% if entry.column %} · Tiir {{ entry.column }}{% endif %}</div>{% endif %}
+            <div class="entry-head-left">
+              <h1 class="entry-title">{{ entry.word }}{% if entry.pos %} <small class="entry-pos">{{ entry.pos }}</small>{% endif %}</h1>
+              {% if entry.page %}
+                <div class="entry-source">Bogga {{ entry.page }}{% if entry.column %} · Tiir {{ entry.column }}{% endif %}</div>
+              {% endif %}
+            </div>
+
+            <div class="entry-actions">
+              <button class="btn btn-primary" id="copyEntryLink" data-url="{{ canonical or request.url }}">Kopi xiriirkan</button>
+              <a href="{{ url_for('dictionary_page') }}" class="btn btn-ghost">Ku noqo Qaamuuska</a>
+            </div>
           </header>
+
           <div class="entry-body">
             <p class="entry-definition">{{ entry.definition }}</p>
+
             {% if entry.crossRefs and entry.crossRefs|length %}
-              <div class="entry-refs">
-                <div class="label">Tixraac</div>
+              <div class="entry-section entry-refs">
+                <div class="section-head">
+                  <h3 class="section-title">Tixraac <span class="count">({{ entry.crossRefs|length }})</span></h3>
+                </div>
                 <div class="chip-grid">
-                  {% for r in entry.crossRefs %}<a href="{{ url_for('entry_page', word=r) }}" class="chip">{{ r }}</a>{% endfor %}
+                  {% for r in entry.crossRefs %}
+                    <a href="{{ url_for('entry_page', word=r) }}" class="chip">{{ r }}</a>
+                  {% endfor %}
                 </div>
               </div>
             {% endif %}
+
             {% if entry.seeAlso and entry.seeAlso|length %}
-              <div class="entry-seealso">
-                <div class="label">Sidoo kale eeg</div>
+              <div class="entry-section entry-seealso">
+                <div class="section-head">
+                  <h3 class="section-title">Sidoo kale eeg <span class="count">({{ entry.seeAlso|length }})</span></h3>
+                </div>
                 <div class="chip-grid">
-                  {% for r in entry.seeAlso %}<a href="{{ url_for('entry_page', word=r) }}" class="chip ghost">{{ r }}</a>{% endfor %}
+                  {% for r in entry.seeAlso %}
+                    <a href="{{ url_for('entry_page', word=r) }}" class="chip ghost">{{ r }}</a>
+                  {% endfor %}
                 </div>
               </div>
             {% endif %}
+
             {% if entry.referredBy and entry.referredBy|length %}
-              <div class="entry-referred">
-                <div class="label">Waxaa lagu tixraacay</div>
+              <div class="entry-section entry-referred">
+                <div class="section-head">
+                  <h3 class="section-title">Waxaa lagu tixraacay <span class="count">({{ entry.referredBy|length }})</span></h3>
+                </div>
                 <div class="chip-grid small">
-                  {% for r in entry.referredBy %}<a href="{{ url_for('entry_page', word=r) }}" class="chip subtle">{{ r }}</a>{% endfor %}
+                  {% for r in entry.referredBy %}
+                    <a href="{{ url_for('entry_page', word=r) }}" class="chip subtle">{{ r }}</a>
+                  {% endfor %}
                 </div>
               </div>
             {% endif %}
+
             {% if entry.similar and entry.similar|length %}
-              <div class="entry-similar">
-                <div class="label">Erayo la mid ah</div>
+              <div class="entry-section entry-similar">
+                <div class="section-head">
+                  <h3 class="section-title">Erayo la mid ah <span class="count">({{ entry.similar|length }})</span></h3>
+                </div>
                 <div class="chip-grid">
-                  {% for r in entry.similar %}<a href="{{ url_for('entry_page', word=r) }}" class="chip">{{ r }}</a>{% endfor %}
+                  {% for r in entry.similar %}
+                    <a href="{{ url_for('entry_page', word=r) }}" class="chip">{{ r }}</a>
+                  {% endfor %}
                 </div>
               </div>
             {% endif %}
@@ -72,4 +102,26 @@
       {% endif %}
     </div>
   </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const btn = document.getElementById('copyEntryLink');
+      if (!btn) return;
+      btn.addEventListener('click', async () => {
+        const url = btn.getAttribute('data-url') || window.location.href;
+        try {
+          await navigator.clipboard.writeText(url);
+          btn.textContent = 'La koobiyeeyay!';
+          setTimeout(() => { btn.textContent = 'Kopi xiriirkan'; }, 1600);
+        } catch(e) {
+          // Fallback
+          const input = document.createElement('input');
+          input.value = url; document.body.appendChild(input); input.select();
+          try { document.execCommand('copy'); btn.textContent = 'La koobiyeeyay!'; } catch(_) {}
+          document.body.removeChild(input);
+          setTimeout(() => { btn.textContent = 'Kopi xiriirkan'; }, 1600);
+        }
+      });
+    });
+  </script>
 {% endblock %}

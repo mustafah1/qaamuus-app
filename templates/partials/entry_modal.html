@@ -1,12 +1,19 @@
 {# Entry Modal Component #}
-<div id="entryModal" class="entry-modal" style="display: none;">
+<div id="entryModal" class="entry-modal" role="dialog" aria-modal="true" aria-labelledby="entryModalWord" style="display: none;">
   <div class="entry-modal-content">
-    <button class="entry-modal-close" id="entryModalClose" aria-label="Close">&times;</button>
+    <div class="entry-modal-topbar">
+      <button class="entry-modal-close" id="entryModalClose" aria-label="Xir">&times;</button>
+    </div>
+
     <div class="entry-modal-word" id="entryModalWord"></div>
     <div class="entry-modal-meta" id="entryModalMeta"></div>
+
     <div class="entry-modal-definition" id="entryModalDefinition"></div>
-    <div class="entry-modal-refs" id="entryModalRefs" aria-live="polite"></div>
-    <div class="entry-modal-incoming" id="entryModalIncoming" aria-live="polite"></div>
-    <div class="entry-modal-similar" id="entryModalSimilar" aria-live="polite"></div>
+
+    <div class="entry-modal-section entry-modal-refs" id="entryModalRefs" aria-live="polite"></div>
+    <div class="entry-modal-section entry-modal-incoming" id="entryModalIncoming" aria-live="polite"></div>
+    <div class="entry-modal-section entry-modal-similar" id="entryModalSimilar" aria-live="polite"></div>
+
+    <div class="entry-modal-hint" aria-hidden="true">Esc — xir modalka</div>
   </div>
 </div>
